@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Movie Ticket Booking</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:#111;
+    color:white;
+}
+
+/* Splash Screen */
+#splash{
+    position:fixed;
+    width:100%;
+    height:100vh;
+    background:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:1000;
+}
+
+#splash img{
+    width:400px;
+    max-width:90%;
+}
+
+/* Movies Page */
+#moviesPage{
+    display:none;
+    padding:20px;
+}
+
+h1{
+    text-align:center;
+    margin-bottom:20px;
+}
+
+.movie-container{
+    display:flex;
+    justify-content:center;
+    gap:20px;
+    flex-wrap:wrap;
+}
+
+.movie-card{
+    background:#222;
+    width:250px;
+    border-radius:10px;
+    overflow:hidden;
+    text-align:center;
+}
+
+.movie-card img{
+    width:100%;
+    height:350px;
+    object-fit:cover;
+}
+
+.movie-card h3{
+    padding:10px;
+}
+
+.movie-card button,
+#bookingPage button{
+    background:green;
+    color:white;
+    border:none;
+    padding:10px 20px;
+    margin:10px;
+    cursor:pointer;
+    border-radius:5px;
+}
+
+/* Booking Page */
+#bookingPage{
+    display:none;
+    padding:20px;
+    text-align:center;
+}
+
+input,select{
+    width:300px;
+    padding:10px;
+    margin:10px;
+    border:none;
+    border-radius:5px;
+}
+
+.screen{
+    width:60%;
+    margin:20px auto;
+    padding:10px;
+    background:#ddd;
+    color:black;
+    border-radius:5px;
+}
+
+.seats{
+    display:grid;
+    grid-template-columns:repeat(4,70px);
+    gap:10px;
+    justify-content:center;
+    margin:20px;
+}
+
+.seat{
+    background:green;
+    padding:15px;
+    border-radius:5px;
+    cursor:pointer;
+}
+
+.selected{
+    background:orange;
+}
+
+#totalAmount{
+    font-size:20px;
+    margin:10px;
+}
+</style>
+</head>
+<body>
+
+<!-- Splash Screen -->
+<div id="splash">
+    <!-- మీ logo image -->
+    <img src="logo.png" alt="Logo">
+</div>
+
+<!-- Movies Page -->
+<div id="moviesPage">
+
+    <h1>🎬 Now Showing Movies</h1>
+
+    <div class="movie-container">
+
+        <div class="movie-card">
+            <img src="https://picsum.photos/300/450?1">
+            <h3>Pushpa 2</h3>
+            <button onclick="selectMovie('Pushpa 2')">Book Now</button>
+        </div>
+
+        <div class="movie-card">
+            <img src="https://picsum.photos/300/450?2">
+            <h3>Salaar</h3>
+            <button onclick="selectMovie('Salaar')">Book Now</button>
+        </div>
+
+        <div class="movie-card">
+            <img src="https://picsum.photos/300/450?3">
+            <h3>Devara</h3>
+            <button onclick="selectMovie('Devara')">Book Now</button>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Booking Page -->
+<div id="bookingPage">
+
+    <h1>🎟️ Book Ticket</h1>
+
+    <h2 id="movieTitle"></h2>
+
+    <input type="text" id="name" placeholder="Enter Name"><br>
+
+    <select id="showtime">
+        <option>10:00 AM</option>
+        <option>2:00 PM</option>
+        <option>6:00 PM</option>
+        <option>9:00 PM</option>
+    </select>
+
+    <div class="screen">SCREEN</div>
+
+    <div class="seats">
+        <div class="seat">A1</div>
+        <div class="seat">A2</div>
+        <div class="seat">A3</div>
+        <div class="seat">A4</div>
+
+        <div class="seat">B1</div>
+        <div class="seat">B2</div>
+        <div class="seat">B3</div>
+        <div class="seat">B4</div>
+    </div>
+
+    <div id="totalAmount">
+        Total Amount: ₹0
+    </div>
+
+    <button onclick="bookTicket()">Confirm Booking</button>
+
+</div>
+
+<script>
+
+// Splash Screen
+setTimeout(() => {
+    document.getElementById("splash").style.display = "none";
+    document.getElementById("moviesPage").style.display = "block";
+},3000);
+
+let selectedMovie = "";
+let selectedSeats = [];
+const ticketPrice = 200;
+
+// Movie Selection
+function selectMovie(movie){
+
+    selectedMovie = movie;
+
+    document.getElementById("moviesPage").style.display = "none";
+    document.getElementById("bookingPage").style.display = "block";
+
+    document.getElementById("movieTitle").innerHTML =
+    "Movie : " + movie;
+}
+
+// Seat Selection
+document.addEventListener("DOMContentLoaded",()=>{
+
+    document.querySelectorAll(".seat").forEach(seat=>{
+
+        seat.addEventListener("click",()=>{
+
+            seat.classList.toggle("selected");
+
+            let seatNo = seat.innerText;
+
+            if(selectedSeats.includes(seatNo)){
+                selectedSeats =
+                selectedSeats.filter(s=>s!==seatNo);
+            }
+            else{
+                selectedSeats.push(seatNo);
+            }
+
+            updateTotal();
+
+        });
+
+    });
+
+});
+
+function updateTotal(){
+
+    let total =
+    selectedSeats.length * ticketPrice;
+
+    document.getElementById("totalAmount").innerHTML =
+    "Total Amount: ₹" + total;
+}
+
+// Booking
+function bookTicket(){
+
+    let name =
+    document.getElementById("name").value;
+
+    let showtime =
+    document.getElementById("showtime").value;
+
+    if(name==""){
+        alert("Please Enter Name");
+        return;
+    }
+
+    if(selectedSeats.length==0){
+        alert("Please Select Seats");
+        return;
+    }
+
+    let total =
+    selectedSeats.length * ticketPrice;
+
+    alert(
+        "🎉 Booking Successful!\n\n" +
+        "Movie : " + selectedMovie +
+        "\nName : " + name +
+        "\nShow Time : " + showtime +
+        "\nSeats : " + selectedSeats.join(", ") +
+        "\nTotal : ₹" + total
+    );
+}
+</script>
+
+</body>
+</html>
