@@ -1,173 +1,37 @@
-// =========================
-// Splash Screen Redirect
-// =========================
-
-if (window.location.pathname.includes("index.html") ||
-    window.location.pathname === "/") {
-
-    setTimeout(() => {
-        window.location.href = "movies.html";
-    }, 3000);
+/* Title Page */
+#titlePage{
+    position:fixed;
+    width:100%;
+    height:100vh;
+    background:linear-gradient(to right,#000,#333);
+    color:white;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    z-index:2000;
 }
 
-
-// =========================
-// Movie Selection
-// =========================
-
-function bookMovie(movieName) {
-    localStorage.setItem("selectedMovie", movieName);
-    window.location.href = "booking.html";
+#titlePage h1{
+    font-size:50px;
+    margin-bottom:15px;
 }
 
-
-// =========================
-// Display Selected Movie
-// =========================
-
-document.addEventListener("DOMContentLoaded", () => {
-
-    const movieTitle = document.getElementById("movieTitle");
-
-    if (movieTitle) {
-        const movie =
-            localStorage.getItem("selectedMovie") || "No Movie Selected";
-
-        movieTitle.innerHTML = "🎬 " + movie;
-    }
-
-    setupSeats();
-});
-
-
-// =========================
-// Seat Selection
-// =========================
-
-let selectedSeats = [];
-
-function setupSeats() {
-
-    const seats = document.querySelectorAll(".seat");
-
-    seats.forEach(seat => {
-
-        seat.addEventListener("click", () => {
-
-            const seatNumber = seat.innerText;
-
-            seat.classList.toggle("selected");
-
-            if (selectedSeats.includes(seatNumber)) {
-
-                selectedSeats =
-                    selectedSeats.filter(s => s !== seatNumber);
-
-            } else {
-
-                selectedSeats.push(seatNumber);
-            }
-
-            updateTotal();
-        });
-
-    });
-
+#titlePage h3{
+    margin-bottom:25px;
 }
 
-
-// =========================
-// Ticket Price Calculation
-// =========================
-
-function updateTotal() {
-
-    const ticketPrice = 200;
-
-    const total =
-        selectedSeats.length * ticketPrice;
-
-    const totalBox =
-        document.getElementById("totalAmount");
-
-    if (totalBox) {
-        totalBox.innerHTML =
-            "Total Amount: ₹" + total;
-    }
+#titlePage button{
+    padding:12px 25px;
+    font-size:18px;
+    background:green;
+    color:white;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
 }
 
-
-// =========================
-// Booking Confirmation
-// =========================
-
-function bookTicket() {
-
-    const name =
-        document.getElementById("name").value;
-
-    const showTime =
-        document.getElementById("showtime").value;
-
-    if (name.trim() === "") {
-        alert("Please Enter Your Name");
-        return;
-    }
-
-    if (selectedSeats.length === 0) {
-        alert("Please Select At Least One Seat");
-        return;
-    }
-
-    const bookingData = {
-        movie: localStorage.getItem("selectedMovie"),
-        name: name,
-        seats: selectedSeats,
-        showtime: showTime,
-        amount: selectedSeats.length * 200
-    };
-
-    localStorage.setItem(
-        "bookingData",
-        JSON.stringify(bookingData)
-    );
-
-    alert(
-        "🎉 Booking Successful!\n\n" +
-        "Movie: " + bookingData.movie +
-        "\nName: " + bookingData.name +
-        "\nSeats: " + bookingData.seats.join(", ") +
-        "\nShow Time: " + bookingData.showtime +
-        "\nAmount: ₹" + bookingData.amount
-    );
-
-    window.location.href = "ticket.html";
+/* Hide Splash Screen Initially */
+#splash{
+    display:none;
 }
-
-
-// =========================
-// Ticket Page Display
-// =========================
-
-function loadTicket() {
-
-    const data =
-        JSON.parse(localStorage.getItem("bookingData"));
-
-    if (!data) return;
-
-    document.getElementById("ticketMovie").innerText =
-        data.movie;
-
-    document.getElementById("ticketName").innerText =
-        data.name;
-
-    document.getElementById("ticketSeats").innerText =
-        data.seats.join(", ");
-
-    document.getElementById("ticketTime").innerText =
-        data.showtime;
-
-    document.getElementById("ticketAmount").innerText =
-        "₹" + data.amount;
-          }
