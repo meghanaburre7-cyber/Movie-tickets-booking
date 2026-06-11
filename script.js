@@ -1,75 +1,95 @@
-body{
-font-family:Arial;
-margin:0;
-padding:20px;
-text-align:center;
-background:#111;
-color:white;
+// Title Page → Splash Screen → Movies Page
+function startApp(){
+
+    document.getElementById("titlePage").style.display = "none";
+    document.getElementById("splash").style.display = "flex";
+
+    setTimeout(() => {
+        document.getElementById("splash").style.display = "none";
+        document.getElementById("moviesPage").style.display = "block";
+    }, 3000);
 }
 
-#splash{
-height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
-background:white;
+let selectedMovie = "";
+let selectedSeats = [];
+const ticketPrice = 200;
+
+// Movie Selection
+function selectMovie(movie){
+
+    selectedMovie = movie;
+
+    document.getElementById("moviesPage").style.display = "none";
+    document.getElementById("bookingPage").style.display = "block";
+
+    document.getElementById("movieTitle").innerHTML =
+    "Movie : " + movie;
 }
 
-#splash img{
-width:500px;
-max-width:90%;
+// Seat Selection
+document.addEventListener("DOMContentLoaded",()=>{
+
+    document.querySelectorAll(".seat").forEach(seat=>{
+
+        seat.addEventListener("click",()=>{
+
+            seat.classList.toggle("selected");
+
+            let seatNo = seat.innerText;
+
+            if(selectedSeats.includes(seatNo)){
+                selectedSeats =
+                selectedSeats.filter(s=>s!==seatNo);
+            }
+            else{
+                selectedSeats.push(seatNo);
+            }
+
+            updateTotal();
+
+        });
+
+    });
+
+});
+
+function updateTotal(){
+
+    let total =
+    selectedSeats.length * ticketPrice;
+
+    document.getElementById("totalAmount").innerHTML =
+    "Total Amount: ₹" + total;
 }
 
-.movie-container{
-display:flex;
-gap:20px;
-justify-content:center;
-flex-wrap:wrap;
-}
+// Booking
+function bookTicket(){
 
-.movie-card{
-background:#222;
-padding:15px;
-border-radius:10px;
-width:250px;
-}
+    let name =
+    document.getElementById("name").value;
 
-.movie-card img{
-width:100%;
-height:350px;
-object-fit:cover;
-}
+    let showtime =
+    document.getElementById("showtime").value;
 
-button{
-background:green;
-color:white;
-border:none;
-padding:10px 20px;
-cursor:pointer;
-border-radius:5px;
-}
+    if(name==""){
+        alert("Please Enter Name");
+        return;
+    }
 
-.seats{
-display:grid;
-grid-template-columns:repeat(4,70px);
-gap:10px;
-justify-content:center;
-margin:20px;
-}
+    if(selectedSeats.length==0){
+        alert("Please Select Seats");
+        return;
+    }
 
-.seat{
-background:green;
-padding:15px;
-cursor:pointer;
-border-radius:5px;
-}
+    let total =
+    selectedSeats.length * ticketPrice;
 
-.selected{
-background:orange;
+    alert(
+        "🎉 Booking Successful!\n\n" +
+        "Movie : " + selectedMovie +
+        "\nName : " + name +
+        "\nShow Time : " + showtime +
+        "\nSeats : " + selectedSeats.join(", ") +
+        "\nTotal : ₹" + total
+    );
 }
-
-input,select{
-padding:10px;
-margin:10px;
-width:300px;
-} **
