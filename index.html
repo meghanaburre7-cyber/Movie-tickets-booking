@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<    <<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -7,140 +7,23 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
     body { background: #0f172a; color: #fff; padding: 20px; }
-   .hidden { display: none; }
-   .container { max-width: 500px; margin: 50px auto; background: #1e293b; padding: 30px; border-radius: 10px; }
+  .hidden { display: none; }
+  .container { max-width: 500px; margin: 50px auto; background: #1e293b; padding: 30px; border-radius: 10px; }
     h1 { text-align: center; color: #ef4444; margin-bottom: 20px; }
     input, select, button { width: 100%; padding: 12px; margin: 8px 0; border: none; border-radius: 6px; font-size: 15px; }
     input, select { background: #0f172a; color: white; border: 1px solid #334155; }
     button { background: #ef4444; color: white; font-weight: bold; cursor: pointer; }
     button:hover { background: #dc2626; }
     button:active { transform: scale(0.98); }
-   .link { text-align: center; margin-top: 15px; color: #94a3b8; }
-   .link span { color: #3b82f6; cursor: pointer; text-decoration: underline; font-weight: bold; }
-   .header { background: #1e293b; padding: 15px; display: flex; justify-content: space-between; align-items: center; margin: -20px -20px 20px -20px; }
-   .logo { font-size: 20px; font-weight: bold; color: #ef4444; }
-   .movies { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin: 20px 0; }
-   .movie { background: #0f172a; padding: 20px; border-radius: 8px; text-align: center; cursor: pointer; border: 2px solid transparent; }
-   .movie:hover { border-color: #ef4444; }
-   .movie.active { border-color: #22c55e; background: #1a2e1a; }
-   .emoji { font-size: 40px; margin-bottom: 10px; }
-   .seats { display: grid; grid-template-columns: repeat(8, 1fr); gap: 5px; margin: 15px 0; }
-   .seat { aspect-ratio: 1; background: #334155; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 10px; }
-   .seat.selected { background: #22c55e; }
-   .seat.booked { background: #ef4444; cursor: not-allowed; }
-   .total { background: #0f172a; padding: 15px; border-radius: 6px; margin: 15px 0; text-align: center; font-size: 18px; font-weight: bold; }
-   .success { background: #22c55e; padding: 15px; border-radius: 6px; text-align: center; margin-top: 15px; }
-  </style>
-</head>
-<body>
-
-  <!-- Login -->
-  <div id="loginBox" class="container">
-    <h1>🎬 Login</h1>
-    <input type="email" id="loginEmail" placeholder="Email">
-    <input type="password" id="loginPass" placeholder="Password">
-    <button onclick="login()">Login</button>
-    <div class="link">Account ledu? <span onclick="showSignup()">Sign Up</span></div>
-  </div>
-
-  <!-- Signup -->
-  <div id="signupBox" class="container hidden">
-    <h1>🎬 Sign Up</h1>
-    <input type="text" id="signupName" placeholder="Name">
-    <input type="email" id="signupEmail" placeholder="Email">
-    <input type="password" id="signupPass" placeholder="Password">
-    <button onclick="signup()">Sign Up</button>
-    <div class="link">Already account unda? <span onclick="showLogin()">Login</span></div>
-  </div>
-
-  <!-- Booking -->
-  <div id="bookingBox" class="hidden">
-    <div class="header">
-      <div class="logo">🎬 BookMyShow</div>
-      <div>
-        <span id="userName"></span>
-        <button onclick="logout()" style="width: auto; padding: 8px 16px; margin-left: 10px;">Logout</button>
-      </div>
-    </div>
-
-    <div class="container" style="max-width: 800px;">
-      <h2>Select Movie</h2>
-      <div class="movies" id="moviesList"></div>
-
-      <div id="bookingDetails" class="hidden">
-        <h3 id="selectedMovie" style="margin: 20px 0;"></h3>
-        
-        <select id="theatre">
-          <option>PVR: Forum Mall</option>
-          <option>INOX: GVK One</option>
-          <option>AMB Cinemas</option>
-        </select>
-
-        <input type="date" id="date">
-        
-        <select id="time">
-          <option>10:00 AM</option>
-          <option>1:00 PM</option>
-          <option>4:00 PM</option>
-          <option>7:00 PM</option>
-          <option>10:00 PM</option>
-        </select>
-
-        <h3 style="margin: 20px 0 10px 0;">Select Seats</h3>
-        <div class="seats" id="seatsGrid"></div>
-
-        <div class="total">Total: ₹<span id="total">0</span></div>
-        <button onclick="bookNow()">Book Now</button>
-        <div id="msg"></div>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    let currentUser = null;
-    let selectedMovie = null;
-    let selectedSeats = [];
-    
-    window.onload = function() {
-      currentUser = JSON.parse(localStorage.getItem('currentUser'));
-      if(currentUser) {
-        showBooking();
-      } else {
-        showLogin();
-      }
-      document.getElementById('date').min = new Date().toISOString().split('T')[0];
-      document.getElementById('date').value = new Date().toISOString().split('T')[0];
-    }
-
-    function showLogin() {
-      document.getElementById('loginBox').classList.remove('hidden');
-      document.getElementById('signupBox').classList.add('hidden');
-      document.getElementById('bookingBox').classList.add('hidden');
-    }
-
-    function showSignup() {
-      document.getElementById('loginBox').classList.add('hidden');
-      document.getElementById('signupBox').classList.remove('hidden');
-      document.getElementById('bookingBox').classList.add('hidden');
-    }
-
-    function showBooking() {
-      document.getElementById('loginBox').classList.add('hidden');
-      document.getElementById('signupBox').classList.add('hidden');
-      document.getElementById('bookingBox').classList.remove('hidden');
-      document.getElementById('userName').innerText = 'Hi, ' + currentUser.name;
-      loadMovies();
-    }
-
-    function signup() {
-      const name = document.getElementById('signupName').value.trim();
-      const email = document.getElementById('signupEmail').value.trim();
-      const pass = document.getElementById('signupPass').value;
-      
-      if(!name ||!email ||!pass) {
-        alert('Anni fields fill chey');
-        return;
-      }
-      
-      let users = JSON.parse(localStorage.getItem('users')) || [];
-      if(users.find(u => u.email ===
+  .link { text-align: center; margin-top: 15px; color: #94a3b8; }
+  .link span { color: #3b82f6; cursor: pointer; text-decoration: underline; font-weight: bold; }
+  .header { background: #1e293b; padding: 15px; display: flex; justify-content: space-between; align-items: center; margin: -20px -20px 20px -20px; }
+  .logo { font-size: 20px; font-weight: bold; color: #ef4444; }
+  .movies { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin: 20px 0; }
+  .movie { background: #0f172a; padding: 20px; border-radius: 8px; text-align: center; cursor: pointer; border: 2px solid transparent; }
+  .movie:hover { border-color: #ef4444; }
+  .movie.active { border-color: #22c55e; background: #1a2e1a; }
+  .emoji { font-size: 40px; margin-bottom: 10px; }
+  .seats { display: grid; grid-template-columns: repeat(8, 1fr); gap: 5px; margin: 15px 0; }
+  .seat { aspect-ratio: 1; background: #334155; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 10px; }
+  .seat.selected { background: #22c55e;
