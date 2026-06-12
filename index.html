@@ -16,7 +16,7 @@
     button:hover { background: #dc2626; }
     button:active { transform: scale(0.98); }
    .link { text-align: center; margin-top: 15px; color: #94a3b8; }
-   .link span { color: #3b82f6; cursor: pointer; text-decoration: underline; }
+   .link span { color: #3b82f6; cursor: pointer; text-decoration: underline; font-weight: bold; }
    .header { background: #1e293b; padding: 15px; display: flex; justify-content: space-between; align-items: center; margin: -20px -20px 20px -20px; }
    .logo { font-size: 20px; font-weight: bold; color: #ef4444; }
    .movies { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin: 20px 0; }
@@ -37,24 +37,20 @@
   <!-- Login -->
   <div id="loginBox" class="container">
     <h1>🎬 Login</h1>
-    <form id="loginForm" onsubmit="return false;">
-      <input type="email" id="loginEmail" placeholder="Email" required>
-      <input type="password" id="loginPass" placeholder="Password" required>
-      <button type="button" id="loginBtn">Login</button>
-    </form>
-    <div class="link">Account ledu? <span id="showSignupLink">Sign Up</span></div>
+    <input type="email" id="loginEmail" placeholder="Email">
+    <input type="password" id="loginPass" placeholder="Password">
+    <button onclick="login()">Login</button>
+    <div class="link">Account ledu? <span onclick="showSignup()">Sign Up</span></div>
   </div>
 
   <!-- Signup -->
   <div id="signupBox" class="container hidden">
     <h1>🎬 Sign Up</h1>
-    <form id="signupForm" onsubmit="return false;">
-      <input type="text" id="signupName" placeholder="Name" required>
-      <input type="email" id="signupEmail" placeholder="Email" required>
-      <input type="password" id="signupPass" placeholder="Password" required>
-      <button type="button" id="signupBtn">Sign Up</button>
-    </form>
-    <div class="link">Already account unda? <span id="showLoginLink">Login</span></div>
+    <input type="text" id="signupName" placeholder="Name">
+    <input type="email" id="signupEmail" placeholder="Email">
+    <input type="password" id="signupPass" placeholder="Password">
+    <button onclick="signup()">Sign Up</button>
+    <div class="link">Already account unda? <span onclick="showLogin()">Login</span></div>
   </div>
 
   <!-- Booking -->
@@ -63,7 +59,7 @@
       <div class="logo">🎬 BookMyShow</div>
       <div>
         <span id="userName"></span>
-        <button id="logoutBtn" style="width: auto; padding: 8px 16px; margin-left: 10px;">Logout</button>
+        <button onclick="logout()" style="width: auto; padding: 8px 16px; margin-left: 10px;">Logout</button>
       </div>
     </div>
 
@@ -83,4 +79,68 @@
         <input type="date" id="date">
         
         <select id="time">
-          <option
+          <option>10:00 AM</option>
+          <option>1:00 PM</option>
+          <option>4:00 PM</option>
+          <option>7:00 PM</option>
+          <option>10:00 PM</option>
+        </select>
+
+        <h3 style="margin: 20px 0 10px 0;">Select Seats</h3>
+        <div class="seats" id="seatsGrid"></div>
+
+        <div class="total">Total: ₹<span id="total">0</span></div>
+        <button onclick="bookNow()">Book Now</button>
+        <div id="msg"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentUser = null;
+    let selectedMovie = null;
+    let selectedSeats = [];
+    
+    window.onload = function() {
+      currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      if(currentUser) {
+        showBooking();
+      } else {
+        showLogin();
+      }
+      document.getElementById('date').min = new Date().toISOString().split('T')[0];
+      document.getElementById('date').value = new Date().toISOString().split('T')[0];
+    }
+
+    function showLogin() {
+      document.getElementById('loginBox').classList.remove('hidden');
+      document.getElementById('signupBox').classList.add('hidden');
+      document.getElementById('bookingBox').classList.add('hidden');
+    }
+
+    function showSignup() {
+      document.getElementById('loginBox').classList.add('hidden');
+      document.getElementById('signupBox').classList.remove('hidden');
+      document.getElementById('bookingBox').classList.add('hidden');
+    }
+
+    function showBooking() {
+      document.getElementById('loginBox').classList.add('hidden');
+      document.getElementById('signupBox').classList.add('hidden');
+      document.getElementById('bookingBox').classList.remove('hidden');
+      document.getElementById('userName').innerText = 'Hi, ' + currentUser.name;
+      loadMovies();
+    }
+
+    function signup() {
+      const name = document.getElementById('signupName').value.trim();
+      const email = document.getElementById('signupEmail').value.trim();
+      const pass = document.getElementById('signupPass').value;
+      
+      if(!name ||!email ||!pass) {
+        alert('Anni fields fill chey');
+        return;
+      }
+      
+      let users = JSON.parse(localStorage.getItem('users')) || [];
+      if(users.find(u => u.email ===
