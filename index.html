@@ -1,91 +1,113 @@
-<!DOCTYPE html>
+<!<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BookMyShow - Movie Tickets</title>
+  <title>Movie Ticket Booking</title>
   <link rel="stylesheet" href="style.css">
-  <script>
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    if(!currentUser) {
-      window.location.href = 'login.html';
-    }
-  </script>
 </head>
 <body>
-  <div class="header">
-    <div class="logo">🎬 BookMyShow</div>
-    <div class="user-info">
-      <span id="userName"></span>
-      <button class="logout-btn" onclick="logout()">Logout</button>
+  <!-- Login Page -->
+  <div id="loginPage" class="auth-container">
+    <div class="auth-box">
+      <h2>🎬 Login</h2>
+      <form id="loginForm">
+        <input type="email" id="loginEmail" placeholder="Email" required>
+        <input type="password" id="loginPassword" placeholder="Password" required>
+        <button type="submit">Login</button>
+      </form>
+      <div class="auth-link">Account ledu? <span id="showSignupBtn">Sign Up</span></div>
     </div>
   </div>
 
-  <div class="container">
-    <h2 class="section-title">Now Showing</h2>
-    <div class="movies" id="moviesList"></div>
+  <!-- Signup Page -->
+  <div id="signupPage" class="auth-container hidden">
+    <div class="auth-box">
+      <h2>🎬 Sign Up</h2>
+      <form id="signupForm">
+        <input type="text" id="signupName" placeholder="Full Name" required>
+        <input type="email" id="signupEmail" placeholder="Email" required>
+        <input type="password" id="signupPassword" placeholder="Password" minlength="6" required>
+        <button type="submit">Sign Up</button>
+      </form>
+      <div class="auth-link">Already account unda? <span id="showLoginBtn">Login</span></div>
+    </div>
+  </div>
 
-    <div class="booking-section" id="bookingSection">
-      <h2 id="selectedMovieTitle"></h2>
-      
-      <div class="select-group">
-        <label>Theatre</label>
-        <select id="theatreSelect">
-          <option>PVR: Forum Mall</option>
-          <option>INOX: GVK One</option>
-          <option>Asian: Lakdikapul</option>
-          <option>AMB Cinemas: Gachibowli</option>
-        </select>
+  <!-- Main Booking App -->
+  <div id="mainApp" class="hidden">
+    <div class="header">
+      <div class="logo">🎬 BookMyShow</div>
+      <div class="user-info">
+        <span id="userName"></span>
+        <button class="logout-btn" id="logoutBtn">Logout</button>
       </div>
+    </div>
 
-      <div class="select-group">
-        <label>Date</label>
-        <input type="date" id="dateSelect">
-      </div>
+    <div class="container">
+      <h2 class="section-title">Now Showing</h2>
+      <div class="movies" id="moviesList"></div>
 
-      <div class="select-group">
-        <label>Show Time</label>
-        <select id="timeSelect">
-          <option>10:00 AM</option>
-          <option>1:15 PM</option>
-          <option>4:30 PM</option>
-          <option>7:45 PM</option>
-          <option>10:30 PM</option>
-        </select>
-      </div>
+      <div class="booking-section hidden" id="bookingSection">
+        <h2 id="selectedMovieTitle"></h2>
+        
+        <div class="select-group">
+          <label>Theatre</label>
+          <select id="theatreSelect">
+            <option>PVR: Forum Mall</option>
+            <option>INOX: GVK One</option>
+            <option>Asian: Lakdikapul</option>
+            <option>AMB Cinemas: Gachibowli</option>
+          </select>
+        </div>
 
-      <div class="select-group">
-        <label>Select Seats</label>
-        <div class="seat-legend">
-          <div class="legend-item"><div class="legend-box available"></div> Available</div>
-          <div class="legend-item"><div class="legend-box selected"></div> Selected</div>
-          <div class="legend-item"><div class="legend-box booked"></div> Booked</div>
+        <div class="select-group">
+          <label>Date</label>
+          <input type="date" id="dateSelect">
         </div>
-        <div class="seats-grid" id="seatsGrid"></div>
-      </div>
 
-      <div class="summary">
-        <div class="summary-row">
-          <span>Selected Seats:</span>
-          <span id="selectedSeatsText">None</span>
+        <div class="select-group">
+          <label>Show Time</label>
+          <select id="timeSelect">
+            <option>10:00 AM</option>
+            <option>1:15 PM</option>
+            <option>4:30 PM</option>
+            <option>7:45 PM</option>
+            <option>10:30 PM</option>
+          </select>
         </div>
-        <div class="summary-row">
-          <span>Tickets:</span>
-          <span id="ticketCount">0</span>
-        </div>
-        <div class="summary-row">
-          <span>Price per ticket:</span>
-          <span>₹200</span>
-        </div>
-        <div class="summary-row total">
-          <span>Total:</span>
-          <span id="totalPrice">₹0</span>
-        </div>
-        <button class="book-btn" id="bookBtn" onclick="bookTickets()" disabled>Book Tickets</button>
-      </div>
 
-      <div class="success-msg" id="successMsg">
-        ✅ Booking Confirmed! Your tickets are booked.
+        <div class="select-group">
+          <label>Select Seats</label>
+          <div class="seat-legend">
+            <div class="legend-item"><div class="legend-box available"></div> Available</div>
+            <div class="legend-item"><div class="legend-box selected"></div> Selected</div>
+            <div class="legend-item"><div class="legend-box booked"></div> Booked</div>
+          </div>
+          <div class="seats-grid" id="seatsGrid"></div>
+        </div>
+
+        <div class="summary">
+          <div class="summary-row">
+            <span>Selected Seats:</span>
+            <span id="selectedSeatsText">None</span>
+          </div>
+          <div class="summary-row">
+            <span>Tickets:</span>
+            <span id="ticketCount">0</span>
+          </div>
+          <div class="summary-row">
+            <span>Price per ticket:</span>
+            <span>₹200</span>
+          </div>
+          <div class="summary-row total">
+            <span>Total:</span>
+            <span id="totalPrice">₹0</span>
+          </div>
+          <button class="book-btn" id="bookBtn" disabled>Book Tickets</button>
+        </div>
+
+        <div class="success-msg hidden" id="successMsg"></div>
       </div>
     </div>
   </div>
